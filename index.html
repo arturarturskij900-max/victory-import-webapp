@@ -1,0 +1,230 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>Подбор авто — Victory Import</title>
+  <link rel="stylesheet" href="style.css">
+  <script src="https://telegram.org/js/telegram-web-app.js"></script>
+</head>
+<body>
+  <div class="app">
+    <!-- Заголовок -->
+    <header class="header">
+      <h1 class="header__title">Подбор авто</h1>
+      <button class="header__close" id="closeBtn" aria-label="Закрыть">✕</button>
+    </header>
+
+    <!-- Фильтры -->
+    <div class="filters" id="filters">
+
+      <!-- Марки -->
+      <div class="filter-item" data-filter="brands">
+        <div class="filter-item__header">
+          <span class="filter-item__label">Марки</span>
+          <span class="filter-item__badge" id="brands-badge"></span>
+          <span class="filter-item__icon">⊕</span>
+        </div>
+        <div class="filter-item__content" id="brands-content">
+          <div class="filter-search">
+            <input type="text" placeholder="Поиск марки..." class="filter-search__input" id="brands-search">
+          </div>
+          <div class="filter-options" id="brands-options"></div>
+        </div>
+      </div>
+
+      <!-- Модели -->
+      <div class="filter-item" data-filter="models">
+        <div class="filter-item__header">
+          <span class="filter-item__label">Модели</span>
+          <span class="filter-item__badge" id="models-badge"></span>
+          <span class="filter-item__icon">⊕</span>
+        </div>
+        <div class="filter-item__content" id="models-content">
+          <div class="filter-search">
+            <input type="text" placeholder="Поиск модели..." class="filter-search__input" id="models-search">
+          </div>
+          <div class="filter-options" id="models-options">
+            <p class="filter-options__empty">Сначала выберите марку</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- Год -->
+      <div class="filter-item" data-filter="year">
+        <div class="filter-item__header">
+          <span class="filter-item__label">Год</span>
+          <span class="filter-item__badge" id="year-badge"></span>
+          <span class="filter-item__icon">⊕</span>
+        </div>
+        <div class="filter-item__content" id="year-content">
+          <div class="filter-range">
+            <div class="filter-range__group">
+              <label>От</label>
+              <select class="filter-range__select" id="year-from"></select>
+            </div>
+            <div class="filter-range__separator">—</div>
+            <div class="filter-range__group">
+              <label>До</label>
+              <select class="filter-range__select" id="year-to"></select>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Аукцион -->
+      <div class="filter-item" data-filter="auctions">
+        <div class="filter-item__header">
+          <span class="filter-item__label">Аукцион / Площадка</span>
+          <span class="filter-item__badge" id="auctions-badge"></span>
+          <span class="filter-item__icon">⊕</span>
+        </div>
+        <div class="filter-item__content" id="auctions-content">
+          <div class="filter-options" id="auctions-options"></div>
+        </div>
+      </div>
+
+      <!-- Повреждения -->
+      <div class="filter-item" data-filter="damageTypes">
+        <div class="filter-item__header">
+          <span class="filter-item__label">Состояние</span>
+          <span class="filter-item__badge" id="damageTypes-badge"></span>
+          <span class="filter-item__icon">⊕</span>
+        </div>
+        <div class="filter-item__content" id="damageTypes-content">
+          <div class="filter-options" id="damageTypes-options"></div>
+        </div>
+      </div>
+
+      <!-- Пробег -->
+      <div class="filter-item" data-filter="mileage">
+        <div class="filter-item__header">
+          <span class="filter-item__label">Пробег, км</span>
+          <span class="filter-item__badge" id="mileage-badge"></span>
+          <span class="filter-item__icon">⊕</span>
+        </div>
+        <div class="filter-item__content" id="mileage-content">
+          <div class="filter-range">
+            <div class="filter-range__group">
+              <label>От</label>
+              <input type="number" class="filter-range__input" id="mileage-from" placeholder="0" min="0" step="10000">
+            </div>
+            <div class="filter-range__separator">—</div>
+            <div class="filter-range__group">
+              <label>До</label>
+              <input type="number" class="filter-range__input" id="mileage-to" placeholder="300 000" min="0" step="10000">
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Топливо -->
+      <div class="filter-item" data-filter="fuelTypes">
+        <div class="filter-item__header">
+          <span class="filter-item__label">Топливо</span>
+          <span class="filter-item__badge" id="fuelTypes-badge"></span>
+          <span class="filter-item__icon">⊕</span>
+        </div>
+        <div class="filter-item__content" id="fuelTypes-content">
+          <div class="filter-options" id="fuelTypes-options"></div>
+        </div>
+      </div>
+
+      <!-- Объём двигателя -->
+      <div class="filter-item" data-filter="engineVolume">
+        <div class="filter-item__header">
+          <span class="filter-item__label">Объём двигателя, л.</span>
+          <span class="filter-item__badge" id="engineVolume-badge"></span>
+          <span class="filter-item__icon">⊕</span>
+        </div>
+        <div class="filter-item__content" id="engineVolume-content">
+          <div class="filter-range">
+            <div class="filter-range__group">
+              <label>От</label>
+              <input type="number" class="filter-range__input" id="engine-from" placeholder="1.0" min="0.5" max="8.0" step="0.1">
+            </div>
+            <div class="filter-range__separator">—</div>
+            <div class="filter-range__group">
+              <label>До</label>
+              <input type="number" class="filter-range__input" id="engine-to" placeholder="7.0" min="0.5" max="8.0" step="0.1">
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Коробка передач -->
+      <div class="filter-item" data-filter="transmissions">
+        <div class="filter-item__header">
+          <span class="filter-item__label">Коробка передач</span>
+          <span class="filter-item__badge" id="transmissions-badge"></span>
+          <span class="filter-item__icon">⊕</span>
+        </div>
+        <div class="filter-item__content" id="transmissions-content">
+          <div class="filter-options" id="transmissions-options"></div>
+        </div>
+      </div>
+
+      <!-- Цена в Европе -->
+      <div class="filter-item" data-filter="priceEU">
+        <div class="filter-item__header">
+          <span class="filter-item__label">🇪🇺 Цена в Европе, €</span>
+          <span class="filter-item__badge" id="priceEU-badge"></span>
+          <span class="filter-item__icon">⊕</span>
+        </div>
+        <div class="filter-item__content" id="priceEU-content">
+          <div class="filter-range">
+            <div class="filter-range__group">
+              <label>От</label>
+              <input type="number" class="filter-range__input" id="priceEU-from" placeholder="0" min="0" step="1000">
+            </div>
+            <div class="filter-range__separator">—</div>
+            <div class="filter-range__group">
+              <label>До</label>
+              <input type="number" class="filter-range__input" id="priceEU-to" placeholder="100 000" min="0" step="1000">
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Стоимость под ключ -->
+      <div class="filter-item" data-filter="priceRU">
+        <div class="filter-item__header">
+          <span class="filter-item__label">🇷🇺 Стоимость под ключ, ₽</span>
+          <span class="filter-item__badge" id="priceRU-badge"></span>
+          <span class="filter-item__icon">⊕</span>
+        </div>
+        <div class="filter-item__content" id="priceRU-content">
+          <div class="filter-range">
+            <div class="filter-range__group">
+              <label>От</label>
+              <input type="number" class="filter-range__input" id="priceRU-from" placeholder="0" min="0" step="100000">
+            </div>
+            <div class="filter-range__separator">—</div>
+            <div class="filter-range__group">
+              <label>До</label>
+              <input type="number" class="filter-range__input" id="priceRU-to" placeholder="15 000 000" min="0" step="100000">
+            </div>
+          </div>
+        </div>
+      </div>
+
+    </div>
+
+    <!-- Кнопка подписки -->
+    <div class="submit-area">
+      <button class="submit-btn" id="submitBtn">
+        Подписаться на обновления
+      </button>
+    </div>
+
+    <!-- FAB кнопка — написать менеджеру -->
+    <a class="fab-phone" id="fabPhone" href="https://t.me/artem_victoryimport" target="_blank" aria-label="Написать менеджеру">
+      <svg viewBox="0 0 24 24" fill="currentColor" width="26" height="26">
+        <path d="M20.665 3.717l-17.73 6.837c-1.21.486-1.203 1.161-.222 1.462l4.552 1.42 10.532-6.645c.498-.303.953-.14.579.192l-8.533 7.701h-.002l.002.001-.314 4.692c.46 0 .663-.211.921-.46l2.211-2.15 4.599 3.397c.848.467 1.457.227 1.668-.785l3.019-14.228c.309-1.239-.473-1.8-1.282-1.434z"/>
+      </svg>
+    </a>
+  </div>
+
+  <script src="app.js"></script>
+</body>
+</html>
